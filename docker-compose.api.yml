@@ -1,4 +1,3 @@
----
 #========================================================================
 # Copyright Universidade Federal do Espirito Santo (Ufes)
 #
@@ -23,31 +22,26 @@ version: '3.8'
 
 services:
 
-    # web app
-    boca-web:
+     boca-adminer:
+        image: adminer:latest
         environment:
-            # database configuration
-            # privileged user password
-            - BOCA_DB_SUPER_PASSWORD=superpass
-        ports: 
-            - 8000:80
-        networks:
-            - bocanet
-
-        
-    # database
-    boca-db:
-        image: postgres:14-alpine
-        environment:
-            # database configuration
-            # privileged user password
-            - POSTGRES_PASSWORD=superpass
-        networks:
-            - bocanet
-
+            - ADMINER_DEFAULT_SERVER=boca-db
         ports:
-            - 5432:5432
+            - 8080:8080
+        networks:
+            - bocanet
 
-networks:
-    bocanet: 
-        driver: bridge
+     boca-api:
+        image: giselle/boca-api:latest
+        build: 
+            context: .
+            dockerfile: docker/dev/api/Dockerfile
+        ports:
+            - 49160:8080
+        networks:
+            - bocanet
+
+
+# volumes:
+
+#     db-data:
